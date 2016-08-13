@@ -14,7 +14,7 @@
             <nav class="header__navigation">
                 <ul>
                     <li>
-                        <a href=#Slide1>Details</a>
+                        <a href=#Slide1 class="active">Details</a>
                         <a href=#Slide2>Emergency Fund</a>
                         <a href=#Slide3>Accomodation</a>
                         <a href=#Slide4>Retirement</a>
@@ -30,16 +30,16 @@
                 <input class="inline-input inline-input--small" type="text" maxlength="2">
                  years old.
                 My income is $
-                <input class="inline-input inline-input--medium inline-input--thousands" type="text" maxlength="9">
+                <input id="Salary" class="inline-input inline-input--medium inline-input--thousands" type="text" maxlength="9">
                  per year.
                 I 
-                <select>
+                <select class="inline-input">
                     <option>am</option>
                     <option>am not</option>
                 </select>
                  a member of KiwiSaver.
                 I 
-                <select>
+                <select class="inline-input">
                     <option>have</option>
                     <option>don't have</option>
                 </select>
@@ -49,8 +49,8 @@
         <section id="Slide2" class="slide">
             <h2>Step 1: Build an Emergency Fund</h2>
             <p>
-                It is generally recommended that you have 3 to 6 months worth of income available at short notice in case of an emergency.
-                Based on your income this would be $x to $y.
+                It is generally recommended that you have 3 to 6 months worth of expenses available at short notice in case of an emergency.
+                Based on your income this would be about $<span id="EmergencyMinimum"></span> to $<span id="EmergencyMaximum"></span>.
             </p>
         </section>
         <section id="Slide3" class="slide">
@@ -150,6 +150,14 @@
         </section>
         <section id="Slide5" class="slide">
             <h2>Step 4: Other Goals</h2>
+            <p>Many people also have other goals which they may be saving for.</p>
+            <p>Some common goals include:</p>
+            <ul>
+                <li>Buying a holiday home</li>
+                <li>Overseas travel</li>
+                <li>Raising children</li>
+                <li>Retiring early</li>
+            </ul>
         </section>
     </body>
 </html>

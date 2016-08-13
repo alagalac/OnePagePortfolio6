@@ -64,7 +64,7 @@ function addCommas(nStr)
 	nStr += '';
 	x = nStr.split('.');
 	x1 = x[0];
-    x1 = x1.replace( /,/g, '');
+    x1 = removeCommas(x1);
 	x2 = x.length > 1 ? '.' + x[1] : '';
 	var rgx = /(\d+)(\d{3})/;
 	while (rgx.test(x1)) {
@@ -72,3 +72,30 @@ function addCommas(nStr)
 	}
 	return x1 + x2;
 }
+
+function removeCommas(nStr)
+{
+	nStr += '';
+    return nStr.replace( /,/g, '');
+}
+
+/*------------------------------------------------------------------
+ Computations
+ ------------------------------------------------------------------*/
+
+ $(document).ready(function () {
+     $('.inline-input').on('input', function(){
+         emergencyFundComputations();
+     });
+ });
+
+ /*------------------------------------------------------------------
+  Emergency Fund Computations
+ ------------------------------------------------------------------*/
+
+ function emergencyFundComputations()
+ {
+     var income = parseInt(removeCommas($('#Salary').val()));
+     $('#EmergencyMinimum').text(addCommas(income / 12 * 3));
+     $('#EmergencyMaximum').text(addCommas(income / 12 * 6));
+ }
