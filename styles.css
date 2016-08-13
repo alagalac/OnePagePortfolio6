@@ -1,5 +1,9 @@
 @import 'https://fonts.googleapis.com/css?family=Roboto+Condensed';
 
+/*
+    colours: http://www.colourlovers.com/palette/819353/Humbly_Hip
+*/
+
 html
 {
     height: 100%;
@@ -19,6 +23,17 @@ body
     font-family: 'Roboto Condensed', sans-serif;
     height: 10vh;
     background-color: #4C99D4;
+}
+
+.header__title
+{
+    color: #F2E9C2;
+    margin: 0;
+    font-size: 70px;
+
+    text-shadow: #333 0px 0px 1px,   #333 0px 0px 1px,   #333 0px 0px 1px,
+             #333 0px 0px 1px,   #333 0px 0px 1px,   #333 0px 0px 1px;
+    -webkit-font-smoothing: antialiased;
 }
 
 .header__navigation
@@ -44,6 +59,7 @@ body
     color: #333;
     background-color: #F2E9C2;
     border-radius: 25px;
+    border: 2px solid #666;
 }
 
 .slide

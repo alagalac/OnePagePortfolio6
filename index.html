@@ -2,10 +2,25 @@
 <html>
     <head>
         <title>One Page Portfolio 6</title>
-        <link rel="stylesheet" href="style.css">
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="styles.css">
+
+            <!-- 1. Load libraries -->
+        <!-- Polyfill(s) for older browsers -->
+        <script src="node_modules/core-js/client/shim.min.js"></script>
+        <script src="node_modules/zone.js/dist/zone.js"></script>
+        <script src="node_modules/reflect-metadata/Reflect.js"></script>
+        <script src="node_modules/systemjs/dist/system.src.js"></script>
+        <!-- 2. Configure SystemJS -->
+        <script src="systemjs.config.js"></script>
+        <script>
+        System.import('app').catch(function(err){ console.error(err); });
+        </script>
     </head>
     <body>
         <header class="header">
+            <h1 class="header__title">OnePagePortfolioSix</h1>
             <nav class="header__navigation">
                 <ul>
                     <li>
@@ -18,17 +33,28 @@
                 </ul>
             </nav>
         </header>
+        <my-app>Loading...</my-app>
         <section id="Slide1" class="slide">
             <h2>Step 0: Details</h2>
             <p>
                 I am <input type="text"> years old.
                 My income is $<input type="text"> per year.
-                I am a member of KiwiSaver.
-                I have a student loan.
+                I 
+                <select>
+                    <option>am</option>
+                    <option>am not</option>
+                </select>
+                 a member of KiwiSaver.
+                I 
+                <select>
+                    <option>have</option>
+                    <option>don't have</option>
+                </select>
+                 a student loan.
             </p>
         </section>
         <section id="Slide2" class="slide">
-            <h2>Step 1: Build an Emerergency Fund</h2>
+            <h2>Step 1: Build an Emergency Fund</h2>
             <p>
                 It is generally recommended that you have 3 to 6 months worth of income available at short notice in case of an emergency.
                 Based on your income this would be $x to $y.
