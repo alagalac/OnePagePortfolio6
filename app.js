@@ -43,5 +43,8 @@ function onScroll(event){
             $('.header__navigation ul li a').removeClass("active");
             currLink.addClass("active");
         }
+        else{
+            currLink.removeClass("active");
+        }
     });
 }
