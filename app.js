@@ -10,7 +10,7 @@
  Scrolling and navigation
  ------------------------------------------------------------------*/
 
- $(document).ready(function () {
+$(document).ready(function () {
     $(document).on("scroll", onScroll);
 
     $('.header__navigation a').on('click', function (e) {
@@ -52,3 +52,23 @@ function onScroll(event){
 /*------------------------------------------------------------------
  Thousands seperator commas
  ------------------------------------------------------------------*/
+
+$(document).ready(function () {
+    $('.inline-input--thousands').keyup(function(){
+        $(this).val(addCommas($(this).val()));
+    });
+});
+
+function addCommas(nStr)
+{
+	nStr += '';
+	x = nStr.split('.');
+	x1 = x[0];
+    x1 = x1.replace( /,/g, '');
+	x2 = x.length > 1 ? '.' + x[1] : '';
+	var rgx = /(\d+)(\d{3})/;
+	while (rgx.test(x1)) {
+		x1 = x1.replace(rgx, '$1' + ',' + '$2');
+	}
+	return x1 + x2;
+}
