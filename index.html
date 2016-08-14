@@ -32,19 +32,67 @@
                 My income is $
                 <input id="Salary" class="inline-input inline-input--medium inline-input--thousands" type="text" maxlength="9">
                  per year.
-                I 
-                <select class="inline-input">
-                    <option>am</option>
-                    <option>am not</option>
+                I contribute
+                <select id="KiwiSaverContributionRate" class="inline-input">
+                    <option value="0">0%</option>
+                    <option value="3">3%</option>
+                    <option value="4">4%</option>
+                    <option value="5">8%</option>
                 </select>
-                 a member of KiwiSaver.
+                 to my KiwiSaver account.
                 I 
-                <select class="inline-input">
-                    <option>have</option>
-                    <option>don't have</option>
+                <select id="HasStudentLoan" class="inline-input">
+                    <option value="1">have</option>
+                    <option value="0">don't have</option>
                 </select>
                  a student loan.
             </p>
+            <table>
+                <tbody>
+                    <tr>
+                        <td>Gross Pay</td>
+                        <td>$<span id="GrossPay"></span></td>
+                    </tr>
+                    <tr>
+                        <td>Income Tax</td>
+                        <td>$<span id="IncomeTax"></span></td>
+                    </tr>
+                    <tr>
+                        <td>ACC Levy</td>
+                        <td>$<span id="ACCLevy"></span></td>
+                    </tr>
+                    <tr>
+                        <td>KiwiSaver</td>
+                        <td>$<span id="KiwiSaver"></span></td>
+                    </tr>
+                    <tr>
+                        <td>Student Loan</td>
+                        <td>$<span id="StudentLoan"></span></td>
+                    </tr>
+                    <tr>
+                        <td>Take Home Pay</td>
+                        <td>$<span id="TakeHomePay"></span></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <table>
+                <tbody>
+                    <tr>
+                        <td>Employee Contribution</td>
+                        <td>$<span id="EmployeeContribution"></span></td>
+                    </tr>
+                    <tr>
+                        <td>Employer Contribution</td>
+                        <td>$<span id="EmployerContribution"></span></td>
+                    </tr>
+                    <tr>
+                        <td>Government Contribution</td>
+                        <td>$<span id="GovernmentContribution"></span></td>
+                    </tr>
+                </tbody>
+            </table>
+
         </section>
         <section id="Slide2" class="slide">
             <h2>Step 1: Build an Emergency Fund</h2>
@@ -52,15 +100,21 @@
                 It is generally recommended that you have 3 to 6 months worth of expenses available at short notice in case of an emergency.
                 Based on your income this would be about $<span id="EmergencyMinimum"></span> to $<span id="EmergencyMaximum"></span>.
             </p>
+            <p>Typical things you might need your emergency fund for:</p>
+            <ul>
+                <li>Covering living expenses incase you loose your job</li>
+                <li>Paying for a medical emergency</li>
+                <li>Attending a funeral overseas</li>
+            </ul>
         </section>
         <section id="Slide3" class="slide">
             <h2>Step 2: Save for a house</h2>
             <p>
                 It is generally recommended that you spend less than 1/3rd of your income on housing expenses.
-                Based on your income this would be $x per month on rent or mortgage payments.
+                Based on your income this would be $<span id="MonthlyAccomodation"></span> per month on rent or mortgage payments.
             </p>
             <p>
-                With a 20% deposit you could comfortably afford the following mortgages.
+                With a 20% deposit over a 25 year term you could comfortably afford the following mortgages.
             </p>
             <table>
                 <thead>
@@ -69,7 +123,7 @@
                         <th>House Value</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody id="MortgageTableBody">
                     <tr>
                         <td>4%</td>
                         <td>x</td>

@@ -1,15 +1,37 @@
 
 /*------------------------------------------------------------------
- Document ready
+ Constants
  ------------------------------------------------------------------*/
+var IncomeTaxBrackets = [
+    {'threshold':14000, 'rate':10.5}, 
+    {'threshold':48000, 'rate':17.5}, 
+    {'threshold':70000, 'rate':30}, 
+    {'threshold':Number.MAX_VALUE, 'rate':33}
+    ];
 
+var ESCTTaxBrackets = [
+    {'threshold':16800, 'rate':10.5}, 
+    {'threshold':57600, 'rate':17.5}, 
+    {'threshold':84000, 'rate':30}, 
+    {'threshold':Number.MAX_VALUE, 'rate':33}
+    ];
 
+var ACCLevyRate = 1.39;
+var ACCLevyMaxIncome = 122063;
+var MTCThreshold = 1042.86;
+var StudentLoanDeductionRate = 12;
+var StudentLoanRepaymentThreshold = 19080;
 
+var MortgageRatesToCalculate = [4, 5, 6, 7, 8, 9, 10]
+
+/*------------------------------------------------------------------
+ Globals
+ ------------------------------------------------------------------*/
+var TakeHomePay = 0;
 
 /*------------------------------------------------------------------
  Scrolling and navigation
  ------------------------------------------------------------------*/
-
 $(document).ready(function () {
     $(document).on("scroll", onScroll);
 
@@ -52,7 +74,6 @@ function onScroll(event){
 /*------------------------------------------------------------------
  Thousands seperator commas
  ------------------------------------------------------------------*/
-
 $(document).ready(function () {
     $('.inline-input--thousands').keyup(function(){
         $(this).val(addCommas($(this).val()));
@@ -70,7 +91,7 @@ function addCommas(nStr)
 	while (rgx.test(x1)) {
 		x1 = x1.replace(rgx, '$1' + ',' + '$2');
 	}
-	return x1 + x2;
+	return x1; // + x2;
 }
 
 function removeCommas(nStr)
@@ -82,20 +103,150 @@ function removeCommas(nStr)
 /*------------------------------------------------------------------
  Computations
  ------------------------------------------------------------------*/
-
- $(document).ready(function () {
+$(document).ready(function () {
      $('.inline-input').on('input', function(){
+         detailsComputations();
          emergencyFundComputations();
+         accomodationComputations();
      });
  });
 
- /*------------------------------------------------------------------
-  Emergency Fund Computations
+/*------------------------------------------------------------------
+  Details Computations
  ------------------------------------------------------------------*/
+function detailsComputations()
+{
+    // Pay calculations
+    var income = parseInt(removeCommas($('#Salary').val()));
+    $('#GrossPay').text(addCommas(income));
 
- function emergencyFundComputations()
- {
-     var income = parseInt(removeCommas($('#Salary').val()));
-     $('#EmergencyMinimum').text(addCommas(income / 12 * 3));
-     $('#EmergencyMaximum').text(addCommas(income / 12 * 6));
- }
+    var incomeTax = calculateIncomeTax(income);
+    $('#IncomeTax').text(addCommas(incomeTax));
+
+    var accLevy = calculateACCLevy(income);
+    $('#ACCLevy').text(addCommas(accLevy));
+
+    var kiwiSaver = calculateEmployeeKiwisaverContributions(income, $('#KiwiSaverContributionRate').val());
+    $('#KiwiSaver').text(addCommas(kiwiSaver));
+
+    var studentLoan = calculateStudentLoanRepayments(income) * $('#HasStudentLoan').val();
+    $('#StudentLoan').text(addCommas(studentLoan));
+
+    TakeHomePay = income - incomeTax - accLevy - kiwiSaver - studentLoan;
+    $('#TakeHomePay').text(addCommas(TakeHomePay));
+
+    // Kiwisaver calculations
+    $('#EmployeeContribution').text(addCommas(kiwiSaver));
+    $('#EmployerContribution').text(addCommas(calculateEmployerKiwisaverContributions(income)));
+    $('#GovernmentContribution').text(addCommas(calculateMemberTaxCredit(kiwiSaver)));
+    
+}
+
+function calculateIncomeTax(income)
+{
+    var tax = 0;
+    var previousThreshold = 0;
+    
+    for(var i = 0; i < IncomeTaxBrackets.length; i++)
+    {
+        var rate = IncomeTaxBrackets[i].rate / 100;
+
+        if(income > IncomeTaxBrackets[i].threshold)
+        {
+            tax += (IncomeTaxBrackets[i].threshold - previousThreshold) * rate;
+        }
+        else if (income > previousThreshold)
+        {
+            tax += (income - previousThreshold) * rate;
+        }
+
+        previousThreshold = IncomeTaxBrackets[i].threshold;
+    }
+
+    return tax;
+}
+
+function calculateACCLevy(income)
+{
+    if (income > ACCLevyMaxIncome)
+    {
+        return ACCLevyMaxIncome * (ACCLevyRate / 100);
+    }
+
+    return income * (ACCLevyRate / 100);
+}
+
+function calculateEmployeeKiwisaverContributions(income, contibutionRate)
+{
+    return income * (contibutionRate / 100);
+}
+
+function calculateEmployerKiwisaverContributions(income)
+{
+    var employerContribution = (income * (3 / 100));
+    employerContribution -= calculateESCT(employerContribution);
+
+    return employerContribution;
+}
+
+function calculateESCT(incomeWithEmployerContributions)
+{
+    var tax = 0;
+    var previousThreshold = 0;
+    
+    for(var i = 0; i < IncomeTaxBrackets.length; i++)
+    {
+        var rate = ESCTTaxBrackets[i].rate / 100;
+
+        if(incomeWithEmployerContributions > ESCTTaxBrackets[i].threshold)
+        {
+            tax += (ESCTTaxBrackets[i].threshold - previousThreshold) * rate;
+        }
+        else if (incomeWithEmployerContributions > previousThreshold)
+        {
+            tax += (incomeWithEmployerContributions - previousThreshold) * rate;
+        }
+
+        previousThreshold = ESCTTaxBrackets[i].threshold;
+    }
+
+    return tax;
+}
+
+function calculateMemberTaxCredit(employeeContributions)
+{
+    var amount = Math.min(employeeContributions, MTCThreshold);
+    return amount / 2;
+}
+
+function calculateStudentLoanRepayments(income)
+{
+    if(income > StudentLoanRepaymentThreshold)
+    {
+        return income * (StudentLoanDeductionRate / 100);
+    }
+
+    return 0;
+}
+
+/*------------------------------------------------------------------
+  Emergency Fund Computations
+------------------------------------------------------------------*/
+function emergencyFundComputations()
+{
+    $('#EmergencyMinimum').text(addCommas(TakeHomePay / 12 * 3));
+    $('#EmergencyMaximum').text(addCommas(TakeHomePay / 12 * 6));
+}
+
+/*------------------------------------------------------------------
+  Accomodation Computations
+------------------------------------------------------------------*/
+function accomodationComputations()
+{
+    $('#MonthlyAccomodation').text(addCommas((TakeHomePay / 12) / 3));
+}
+
+function calculateMortgagePrincipal(monthlyPayment, annualInterestRate)
+{
+    
+}
