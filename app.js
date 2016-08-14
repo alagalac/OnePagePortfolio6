@@ -103,13 +103,14 @@ function removeCommas(nStr)
 }
 
 /*------------------------------------------------------------------
- Computations
+  Computations
  ------------------------------------------------------------------*/
 $(document).ready(function () {
      $('.inline-input').on('input', function(){
          detailsComputations();
          emergencyFundComputations();
          accomodationComputations();
+         retirementComputations();
      });
  });
 
@@ -139,7 +140,7 @@ function detailsComputations()
 
     // Kiwisaver calculations
     $('#EmployeeContribution').text(addCommas(kiwiSaver));
-    $('#EmployerContribution').text(addCommas(calculateEmployerKiwisaverContributions(income)));
+    $('#EmployerContribution').text(addCommas(calculateEmployerKiwisaverContributions(income, $('#KiwiSaverContributionRate').val())));
     $('#GovernmentContribution').text(addCommas(calculateMemberTaxCredit(kiwiSaver)));
     
 }
@@ -183,8 +184,13 @@ function calculateEmployeeKiwisaverContributions(income, contibutionRate)
     return income * (contibutionRate / 100);
 }
 
-function calculateEmployerKiwisaverContributions(income)
+function calculateEmployerKiwisaverContributions(income, contibutionRate)
 {
+    if (contibutionRate == 0)
+    {
+        return 0;
+    }
+    
     var employerContribution = (income * (3 / 100));
     employerContribution -= calculateESCT(employerContribution);
 
@@ -232,7 +238,7 @@ function calculateStudentLoanRepayments(income)
 }
 
 /*------------------------------------------------------------------
-  Emergency Fund Computations
+ Emergency Fund Computations
 ------------------------------------------------------------------*/
 function emergencyFundComputations()
 {
@@ -241,7 +247,7 @@ function emergencyFundComputations()
 }
 
 /*------------------------------------------------------------------
-  Accomodation Computations
+ Accomodation Computations
 ------------------------------------------------------------------*/
 function accomodationComputations()
 {
@@ -266,4 +272,13 @@ function calculateMortgagePrincipal(monthlyPayment, annualInterestRate, years)
 
     var principal = monthlyPayment * ((1 - Math.pow(1 + monthlyRate, -terms)) / monthlyRate);
     return principal;
+}
+
+/*------------------------------------------------------------------
+ Retirement Computations
+------------------------------------------------------------------*/
+function retirementComputations()
+{
+    var postRetirementExpenditure = TakeHomePay * 0.8;
+    $('#PostRetirementExpenditure').text(addCommas(postRetirementExpenditure));
 }
