@@ -23,6 +23,8 @@ var StudentLoanDeductionRate = 12;
 var StudentLoanRepaymentThreshold = 19080;
 
 var MortgageRatesToCalculate = [4, 5, 6, 7, 8, 9, 10]
+var MortgageTerm = 25;
+var MortgageDepositPercentage = 20;
 
 /*------------------------------------------------------------------
  Globals
@@ -243,10 +245,25 @@ function emergencyFundComputations()
 ------------------------------------------------------------------*/
 function accomodationComputations()
 {
-    $('#MonthlyAccomodation').text(addCommas((TakeHomePay / 12) / 3));
+    var monthlyAccomodation = (TakeHomePay / 12) / 3;
+    $('#MonthlyAccomodation').text(addCommas(monthlyAccomodation));
+    $('#MortgageTableBody').empty();
+
+    for (var i = 0; i < MortgageRatesToCalculate.length; i++)
+    {
+        var row = $('<tr>');
+        row.append($('<td>').text(MortgageRatesToCalculate[i] + '%'));
+        var mortgageValue = calculateMortgagePrincipal(monthlyAccomodation, MortgageRatesToCalculate[i], MortgageTerm) / (1 - (MortgageDepositPercentage / 100));
+        row.append($('<td>').text('$' + addCommas(mortgageValue)).addClass('right-align'));
+        $('#MortgageTableBody').append(row);
+    }
 }
 
-function calculateMortgagePrincipal(monthlyPayment, annualInterestRate)
+function calculateMortgagePrincipal(monthlyPayment, annualInterestRate, years)
 {
-    
+    var monthlyRate = (annualInterestRate / 12) / 100; // Assuming annual rate isn't compounded. Usually it isn't.
+    var terms = years * 12;
+
+    var principal = monthlyPayment * ((1 - Math.pow(1 + monthlyRate, -terms)) / monthlyRate);
+    return principal;
 }

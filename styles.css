@@ -120,3 +120,36 @@ body, html {
 {
     width: 5em;
 }
+
+/*------------------------------------------------------------------
+ Tables
+ ------------------------------------------------------------------*/
+table
+{
+    border-collapse: collapse;
+}
+
+thead tr
+{
+    border-bottom: 3px solid;
+}
+
+tbody tr
+{
+    border-bottom: 1px solid;
+}
+
+tbody tr:last-child
+{
+    border-bottom: 0;
+}
+
+th
+{
+    padding: 8px;
+}
+
+td.right-align
+{
+    text-align: right;
+}
