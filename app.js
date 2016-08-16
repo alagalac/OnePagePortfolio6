@@ -26,6 +26,14 @@ var MortgageRatesToCalculate = [4, 5, 6, 7, 8, 9, 10]
 var MortgageTerm = 25;
 var MortgageDepositPercentage = 20;
 
+var KiwiSaverContributionRates = [0, 3, 4, 8]
+var KiwiSaverFundTypes = [
+    {'name': 'Conservative', 'return': 3},
+    {'name': 'Balanced', 'return': 5},
+    {'name': 'Growth', 'return': 7},
+    ]
+var RetirementAge = 65;
+
 /*------------------------------------------------------------------
  Globals
  ------------------------------------------------------------------*/
@@ -179,6 +187,15 @@ function calculateACCLevy(income)
     return income * (ACCLevyRate / 100);
 }
 
+function calculateKiwisaverContributions(income, contributionRate)
+{
+    var employee = calculateEmployeeKiwisaverContributions(income, contributionRate);
+    var employer = calculateEmployerKiwisaverContributions(income, contributionRate);
+    var govt = calculateMemberTaxCredit(employee);
+
+    return employee + employer + govt;
+}
+
 function calculateEmployeeKiwisaverContributions(income, contibutionRate)
 {
     return income * (contibutionRate / 100);
@@ -190,7 +207,7 @@ function calculateEmployerKiwisaverContributions(income, contibutionRate)
     {
         return 0;
     }
-    
+
     var employerContribution = (income * (3 / 100));
     employerContribution -= calculateESCT(employerContribution);
 
@@ -281,4 +298,31 @@ function retirementComputations()
 {
     var postRetirementExpenditure = TakeHomePay * 0.8;
     $('#PostRetirementExpenditure').text(addCommas(postRetirementExpenditure));
+
+    var income = parseInt(removeCommas($('#Salary').val()));
+
+    $('#RetirementTableBody').empty();
+
+    for(var i = 0; i < KiwiSaverContributionRates.length; i++)
+    {
+        var years = RetirementAge - $('#Age').val();
+        var principal = 0;
+        var compoundsPerYear = 12; // Also number of contributions
+
+        var row = $('<tr>');
+        row.append($('<td>').text(KiwiSaverContributionRates[i] + '%'));
+
+        for(var j = 0; j < KiwiSaverFundTypes.length; j++)
+        {
+            var rate = KiwiSaverFundTypes[j].return / 100;
+            var contribution = calculateKiwisaverContributions(income, KiwiSaverContributionRates[i]) / 12; // Contribution per period.
+
+            var conpoundInterestForPrincipal = Math.pow(principal * (1 + (rate / compoundsPerYear)), compoundsPerYear * years);
+            var FVOfSeries = contribution * ((Math.pow(1 + (rate / compoundsPerYear), compoundsPerYear * years) - 1) / (rate / compoundsPerYear));
+
+            row.append($('<td>').text('$' + addCommas(conpoundInterestForPrincipal + FVOfSeries)));
+        }
+
+        $('#RetirementTableBody').append(row);
+    }
 }
