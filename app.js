@@ -114,12 +114,17 @@ function removeCommas(nStr)
   Computations
  ------------------------------------------------------------------*/
 $(document).ready(function () {
-     $('.inline-input').on('input', function(){
-         detailsComputations();
-         emergencyFundComputations();
-         accomodationComputations();
-         retirementComputations();
-     });
+    $('.inline-input').on('input', function(){
+        detailsComputations();
+        emergencyFundComputations();
+        accomodationComputations();
+        retirementComputations();
+    });
+
+    detailsComputations();
+    emergencyFundComputations();
+    accomodationComputations();
+    retirementComputations();
  });
 
 /*------------------------------------------------------------------
@@ -128,7 +133,7 @@ $(document).ready(function () {
 function detailsComputations()
 {
     // Pay calculations
-    var income = parseInt(removeCommas($('#Salary').val()));
+    var income = parseInt(removeCommas($('#Salary').val())) || 0;
     $('#GrossPay').text(addCommas(income));
 
     var incomeTax = calculateIncomeTax(income);
@@ -299,7 +304,7 @@ function retirementComputations()
     var postRetirementExpenditure = TakeHomePay * 0.8;
     $('#PostRetirementExpenditure').text(addCommas(postRetirementExpenditure));
 
-    var income = parseInt(removeCommas($('#Salary').val()));
+    var income = parseInt(removeCommas($('#Salary').val())) || 0;
 
     $('#RetirementTableBody').empty();
 

@@ -33,7 +33,6 @@ body, html {
     color: #F2E9C2;
     margin: 0;
     font-size: 70px;
-
     text-shadow: #333 0px 0px 1px,   #333 0px 0px 1px,   #333 0px 0px 1px,
              #333 0px 0px 1px,   #333 0px 0px 1px,   #333 0px 0px 1px;
     -webkit-font-smoothing: antialiased;
@@ -124,32 +123,76 @@ body, html {
 /*------------------------------------------------------------------
  Tables
  ------------------------------------------------------------------*/
-table
+.table
 {
     border-collapse: collapse;
 }
 
-thead tr
+.table__header
 {
     border-bottom: 3px solid;
 }
 
-tbody tr
-{
-    border-bottom: 1px solid;
-}
-
-tbody tr:last-child
-{
-    border-bottom: 0;
-}
-
-th
+.table__header th
 {
     padding: 8px;
 }
 
-td.right-align
+.table__footer
+{
+    border-top: 3px solid;
+    border-bottom: 3px solid;
+}
+
+.table tr
+{
+    border-bottom: 1px solid;
+}
+
+.table tr:last-child
+{
+    border-bottom: 0;
+}
+
+.table td.right-align
 {
     text-align: right;
+}
+
+/*------------------------------------------------------------------
+ Tooltip
+ ------------------------------------------------------------------*/
+[data-tooltip]
+{
+    display: inline;
+    position: relative;
+    cursor: pointer;
+}
+
+[data-tooltip]:hover:after
+{
+    background: #333;
+    border-radius: 5px;
+    bottom: 26px;
+    color: #fff;
+    content: attr(data-tooltip);
+    left: 20%;
+    padding: 5px 15px;
+    position: absolute;
+    z-index: 98;
+    margin-bottom: 12px;
+    font-size: 16px;
+}
+
+[data-tooltip]:hover:before
+{
+    border: solid;
+    border-color: #333 transparent;
+    border-width: 6px 6px 0 6px;
+    bottom: 20px;
+    content: "";
+    left: 50%;
+    position: absolute;
+    z-index: 99;
+    margin-bottom: 12px;
 }
