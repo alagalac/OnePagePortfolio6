@@ -2,6 +2,9 @@
 
 Todo:
 - Better font for main title
+- Add x axis title on mortgage graph [DONE]
 - Align heading titles with menu labels
+- Look at making retirement graph colors white [DONE]
 - Sort out text and graph placement on slides
 - Add good luck message on final slide?
+- Update retirement slide to have monthly incomes
