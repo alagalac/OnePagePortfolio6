@@ -31,7 +31,7 @@ body, html {
 
 .header__title
 {
-    color: #F2E9C2;
+    color: #FFD749;
     margin: 0;
     font-size: 70px;
     text-shadow: #333 0px 0px 1px,   #333 0px 0px 1px,   #333 0px 0px 1px,
@@ -63,16 +63,15 @@ body, html {
     text-decoration: none;
     margin-right: 5px;
     padding-top: 2px;
-    color: #333;
-    background-color: #F2E9C2;
+    color: #fefefe;
     text-align: center;
-    border: 1px solid #666;
+
     width: 150px;
 }
 
 .header__navigation li.active a
 {
-    background-color: #70AB4B;
+    color: #FFD749;
 }
 
 .header__navigation span
@@ -82,7 +81,7 @@ body, html {
 	display: block;
 	width: 154px;
 	height: 2px;
-	background: #666;
+	background: #FFD749;
 }
 
 .header__navigation ul li, .header__navigation span {
