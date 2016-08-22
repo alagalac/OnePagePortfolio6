@@ -6,6 +6,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="styles.css">
         <script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.2.1/Chart.min.js"></script>
         <script src="app.js"></script>
     </head>
     <body>
@@ -25,7 +26,7 @@
         </header>
         <section id="Slide1" class="slide">
             <h2>Step 0: Details</h2>
-            <p>
+            <p class="slide__half">
                 I am 
                 <input id="Age" class="inline-input inline-input--small" type="text" maxlength="2">
                  years old.
@@ -47,6 +48,7 @@
                 </select>
                  a student loan.
             </p>
+            <!--
             <table class="table">
                 <tbody>
                     <tr>
@@ -77,6 +79,10 @@
                     </tr>
                 </tfoot>
             </table>
+            -->
+            <div class="chart">
+                <canvas id="IncomeChart" width="400" height="400"></canvas>
+            </div>
 
 <!--
             <table>
@@ -119,6 +125,7 @@
             <p>
                 With a 20% deposit over a 25 year term you could comfortably afford the following mortgages:
             </p>
+            <!--
             <table class="table">
                 <thead class="table__header">
                     <tr>
@@ -129,6 +136,10 @@
                 <tbody id="MortgageTableBody">
                 </tbody>
             </table>
+            -->
+            <div class="chart">
+                <div id="MortgageChart" class="ct-chart ct-perfect-fourth"></div>
+            </div>
         </section>
         <section id="Slide4" class="slide">
             <h2>Step 3: Save for Retirement</h2>

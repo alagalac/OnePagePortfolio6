@@ -111,50 +111,74 @@ function removeCommas(nStr)
 }
 
 /*------------------------------------------------------------------
-  Computations
- ------------------------------------------------------------------*/
-$(document).ready(function () {
-    $('.inline-input').on('input', function(){
-        detailsComputations();
-        emergencyFundComputations();
-        accomodationComputations();
-        retirementComputations();
-    });
-
-    detailsComputations();
-    emergencyFundComputations();
-    accomodationComputations();
-    retirementComputations();
- });
-
-/*------------------------------------------------------------------
   Details Computations
  ------------------------------------------------------------------*/
+var incomeChart;
+
+$(document).ready(function () {
+    var incomeChartData = {
+        labels: ['Take Home Pay', 'Income Tax', 'ACC Levy', 'KiwiSaver Contributions', 'Student Loan Payments'],
+        datasets: [{ 
+            data: [0, 0, 0, 0, 0],
+            backgroundColor: [
+                'rgb(255, 99, 132)',
+                'rgb(54, 162, 235)',
+                'rgb(255, 206, 86)',
+                'rgb(75, 192, 192)',
+                'rgb(153, 102, 255)',
+                'rgb(255, 159, 64)'
+                ]
+        }]
+    };
+
+    var incomeChartOptions = {
+        legend:
+        {
+            display: false
+        },
+        tooltips: {
+            callbacks: {
+                    label: function(tooltipItem, data) { 
+                        return data.labels[tooltipItem.index] + ': $' + addCommas(data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index]);
+                    }
+                }
+        }
+    }
+
+    incomeChart = new Chart($('#IncomeChart'), {
+        type: 'doughnut',
+        data: incomeChartData,
+        options: incomeChartOptions
+    });
+ });
+
 function detailsComputations()
 {
     // Pay calculations
     var income = parseInt(removeCommas($('#Salary').val())) || 0;
-    $('#GrossPay').text(addCommas(income));
-
     var incomeTax = calculateIncomeTax(income);
-    $('#IncomeTax').text(addCommas(incomeTax));
-
     var accLevy = calculateACCLevy(income);
-    $('#ACCLevy').text(addCommas(accLevy));
-
     var kiwiSaver = calculateEmployeeKiwisaverContributions(income, $('#KiwiSaverContributionRate').val());
-    $('#KiwiSaver').text(addCommas(kiwiSaver));
-
     var studentLoan = calculateStudentLoanRepayments(income) * $('#HasStudentLoan').val();
-    $('#StudentLoan').text(addCommas(studentLoan));
-
     TakeHomePay = income - incomeTax - accLevy - kiwiSaver - studentLoan;
+
+    /*
+    $('#GrossPay').text(addCommas(income));
+    $('#IncomeTax').text(addCommas(incomeTax));
+    $('#ACCLevy').text(addCommas(accLevy));
+    $('#KiwiSaver').text(addCommas(kiwiSaver));
+    $('#StudentLoan').text(addCommas(studentLoan));
     $('#TakeHomePay').text(addCommas(TakeHomePay));
 
     // Kiwisaver calculations
     $('#EmployeeContribution').text(addCommas(kiwiSaver));
     $('#EmployerContribution').text(addCommas(calculateEmployerKiwisaverContributions(income, $('#KiwiSaverContributionRate').val())));
     $('#GovernmentContribution').text(addCommas(calculateMemberTaxCredit(kiwiSaver)));
+    */
+    
+    var updatedChartData = [TakeHomePay, incomeTax, accLevy, kiwiSaver, studentLoan];
+    incomeChart.data.datasets[0].data = updatedChartData;
+    incomeChart.update();
     
 }
 
@@ -277,6 +301,11 @@ function accomodationComputations()
     $('#MonthlyAccomodation').text(addCommas(monthlyAccomodation));
     $('#MortgageTableBody').empty();
 
+    var chartData = {
+        labels: [],
+        series: [[]]
+    };
+
     for (var i = 0; i < MortgageRatesToCalculate.length; i++)
     {
         var row = $('<tr>');
@@ -284,7 +313,24 @@ function accomodationComputations()
         var mortgageValue = calculateMortgagePrincipal(monthlyAccomodation, MortgageRatesToCalculate[i], MortgageTerm) / (1 - (MortgageDepositPercentage / 100));
         row.append($('<td>').text('$' + addCommas(mortgageValue)).addClass('right-align'));
         $('#MortgageTableBody').append(row);
+
+        chartData.labels.push(MortgageRatesToCalculate[i] + '%');
+        chartData.series[0].push(mortgageValue);
     }
+
+    
+    /* Chart time */
+    var chartOptions = {
+        axisY: {
+            labelInterpolationFnc: function(value) {
+                return '$' + addCommas(value);
+            },
+            scaleMinSpace: 15
+        }
+    };
+
+    new Chartist.Bar('#MortgageChart', chartData, chartOptions);
+
 }
 
 function calculateMortgagePrincipal(monthlyPayment, annualInterestRate, years)
@@ -331,3 +377,20 @@ function retirementComputations()
         $('#RetirementTableBody').append(row);
     }
 }
+
+/*------------------------------------------------------------------
+  Computations
+ ------------------------------------------------------------------*/
+$(document).ready(function () {
+    $('.inline-input').on('input', function(){
+        detailsComputations();
+        emergencyFundComputations();
+        accomodationComputations();
+        retirementComputations();
+    });
+
+    detailsComputations();
+    emergencyFundComputations();
+    accomodationComputations();
+    retirementComputations();
+ });
