@@ -38,9 +38,11 @@ var ChartColours = [
     '#FF6384',
     '#36A2EB',
     '#FFCE56',
-    '#4BC0C0',
     '#9966FF',
-    '#FF9F40'
+    '#FF9F40',
+    '#666',
+    '#C8C2E8'
+
 ];
 
 /*------------------------------------------------------------------
@@ -422,7 +424,10 @@ $(document).ready(function () {
         scales: {
             yAxes: [{
                 ticks: {
-                    beginAtZero: true
+                    beginAtZero: true,
+                    callback: function(value) {
+                        return '$' + addCommas(value);
+                    }
                 }
             }]
         }
@@ -452,18 +457,25 @@ $(document).ready(function () {
             callbacks: {
                 label: function(tooltipItem, data) { 
                     var datasetLabel = data.datasets[tooltipItem.datasetIndex].label;
-                    return datasetLabel + '% Contribution rate: $' + addCommas(data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index]);
+                    return [datasetLabel + '% Contribution rate','$' + addCommas(data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index])];
                 }
             }
         },
         scales: {
             yAxes: [{
                 ticks: {
-                    beginAtZero: true
+                    beginAtZero: true,
+                    callback: function(value) {
+                        return '$' + addCommas(value);
+                    }
                 }
             }]
         }
     }
+
+    Chart.defaults.global.defaultFontColor = '#333';
+
+    Chart.defaults.global.defaultFontSize = 18;
 
     retirementChart = new Chart($('#RetirementChart'), {
         type: 'bar',

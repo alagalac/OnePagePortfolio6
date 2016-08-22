@@ -11,6 +11,7 @@ body, html {
     width: 100%;
 
     color: #333;
+    background-color: #fefefe;
 }
 
 /*------------------------------------------------------------------
@@ -25,7 +26,7 @@ body, html {
     right: 0;
     font-family: 'Roboto Condensed', sans-serif;
     height: 75px;
-    background-color: #4C99D4;
+    background-color: #293C5E;
 }
 
 .header__title
@@ -130,12 +131,6 @@ ul li:not(.active):nth-child(5):hover ~ span {
     font-size: 32px;
 }
 
-.slide:nth-child(odd)
-{
-    color: #fff;
-    background-color: #70AB4B;
-}
-
 .slide h2
 {
     margin: 0;
@@ -143,10 +138,28 @@ ul li:not(.active):nth-child(5):hover ~ span {
     font-size: 80px;
 }
 
+.slide .computed-figure
+{
+    color: #3DA5D9;
+}
+
+.slide:nth-child(odd)
+{
+    color: #fefefe;
+    background-color: #68ADA6;
+}
+
+.slide:nth-child(odd) .computed-figure
+{
+    color: #FFD749;
+}
+
 .slide__half
 {
     width: 50%;
 }
+
+
 
 /*------------------------------------------------------------------
  Inputs
@@ -159,9 +172,10 @@ ul li:not(.active):nth-child(5):hover ~ span {
     font-size: 1em;
     border: 0;
     outline: 0;
-    color: #4C99D4;
+    color: #3DA5D9;
     border-bottom: 1px solid #999;
     text-align: center;
+    background-color: inherit;
 }
 
 .inline-input--small
@@ -257,5 +271,5 @@ ul li:not(.active):nth-child(5):hover ~ span {
 .chart
 {
     height: 400px;
-    width: 400px;
+    width: 50%;
 }
