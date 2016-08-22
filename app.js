@@ -473,7 +473,13 @@ $(document).ready(function () {
                     beginAtZero: true,
                     callback: function(value) {
                         return '$' + addCommas(value);
-                    }
+                    },
+                    fontColor: '#fff'
+                }
+            }],
+            xAxes: [{
+                ticks: {
+                    fontColor: '#fff'
                 }
             }]
         }
