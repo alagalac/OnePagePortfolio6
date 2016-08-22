@@ -33,14 +33,20 @@
                 My income is $
                 <input id="Salary" class="inline-input inline-input--medium inline-input--thousands" type="text" maxlength="9">
                  per year.
-                I contribute
+            </p>
+            <p>
+                My KiwiSaver account has a balance of $
+                <input id="KiwiSaverBalance" class="inline-input inline-input--medium inline-input--thousands" type="text" maxlength="9">
+                and I contribute
                 <select id="KiwiSaverContributionRate" class="inline-input">
                     <option value="0">0%</option>
                     <option value="3">3%</option>
                     <option value="4">4%</option>
                     <option value="5">8%</option>
                 </select>
-                 to my KiwiSaver account.
+                 of my income.
+            </p>
+            <p>
                 I 
                 <select id="HasStudentLoan" class="inline-input">
                     <option value="0">don't have</option>
@@ -151,21 +157,12 @@
                 The NZ Superannuation fortnightly payments are $886.86 for a single person living alone, or $671.48 each for a couple.
             </p>
             <p>
-                The following table lists what your retirement income could be, depending on your
+                The following chart indicates what your retirement income could be, depending on your
                 retirement contributions.
             </p>
-            <table class="table">
-                <thead class="table__header">
-                    <tr>
-                        <th>KiwiSaver Contribution Rate</th>
-                        <th>Convervative Fund <span data-tooltip="This assumes a 3% real rate of return.">?</span></th>
-                        <th>Balanced Fund <span data-tooltip="This assumes a 5% real rate of return.">?</span></th>
-                        <th>Growth Fund <span data-tooltip="This assumes a 7% real rate of return.">?</span></th>
-                    </tr>
-                </thead>
-                <tbody id="RetirementTableBody">
-                </tbody>
-            </table>
+            <div class="chart">
+                <canvas id="RetirementChart" width="400" height="400"></canvas>
+            </div>
         </section>
         <section id="Slide5" class="slide">
             <h2>Step 4: Other Goals</h2>

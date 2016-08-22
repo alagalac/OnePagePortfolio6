@@ -34,12 +34,22 @@ var KiwiSaverFundTypes = [
     ]
 var RetirementAge = 65;
 
+var ChartColours = [
+    'rgb(255, 99, 132)',
+    'rgb(54, 162, 235)',
+    'rgb(255, 206, 86)',
+    'rgb(75, 192, 192)',
+    'rgb(153, 102, 255)',
+    'rgb(255, 159, 64)'
+];
+
 /*------------------------------------------------------------------
  Globals
  ------------------------------------------------------------------*/
 var TakeHomePay = 0;
 var incomeChart;
 var mortgageChart;
+var retirementChart;
 
 /*------------------------------------------------------------------
  Scrolling and navigation
@@ -262,24 +272,18 @@ function accomodationComputations()
 {
     var monthlyAccomodation = (TakeHomePay / 12) / 3;
     $('#MonthlyAccomodation').text(addCommas(monthlyAccomodation));
-    $('#MortgageTableBody').empty();
 
     var labels = [];
     var data = [];
 
     for (var i = 0; i < MortgageRatesToCalculate.length; i++)
     {
-        var row = $('<tr>');
-        row.append($('<td>').text(MortgageRatesToCalculate[i] + '%'));
         var mortgageValue = calculateMortgagePrincipal(monthlyAccomodation, MortgageRatesToCalculate[i], MortgageTerm) / (1 - (MortgageDepositPercentage / 100));
-        row.append($('<td>').text('$' + addCommas(mortgageValue)).addClass('right-align'));
-        $('#MortgageTableBody').append(row);
 
         labels.push(MortgageRatesToCalculate[i] + '%');
         data.push(mortgageValue);
     }
 
-    
     /* Chart time */
     mortgageChart.data.labels = labels;
     mortgageChart.data.datasets[0].data = data;
@@ -306,30 +310,38 @@ function retirementComputations()
 
     var income = parseInt(removeCommas($('#Salary').val())) || 0;
 
-    $('#RetirementTableBody').empty();
+    var currentBalance = parseInt(removeCommas($('#KiwiSaverBalance').val())) || 0;
+
+    var datasets = [];
 
     for(var i = 0; i < KiwiSaverContributionRates.length; i++)
     {
         var years = RetirementAge - $('#Age').val();
-        var principal = 0;
+        var principal = currentBalance;
         var compoundsPerYear = 12; // Also number of contributions
 
-        var row = $('<tr>');
-        row.append($('<td>').text(KiwiSaverContributionRates[i] + '%'));
+        var rowData = {
+            label: KiwiSaverContributionRates[i],
+            backgroundColor: ChartColours[i],
+            data: []
+        };
 
         for(var j = 0; j < KiwiSaverFundTypes.length; j++)
         {
             var rate = KiwiSaverFundTypes[j].return / 100;
             var contribution = calculateKiwisaverContributions(income, KiwiSaverContributionRates[i]) / 12; // Contribution per period.
 
-            var conpoundInterestForPrincipal = Math.pow(principal * (1 + (rate / compoundsPerYear)), compoundsPerYear * years);
+            var compoundInterestForPrincipal = principal * Math.pow((1 + (rate / compoundsPerYear)), compoundsPerYear * years);
             var FVOfSeries = contribution * ((Math.pow(1 + (rate / compoundsPerYear), compoundsPerYear * years) - 1) / (rate / compoundsPerYear));
-
-            row.append($('<td>').text('$' + addCommas(conpoundInterestForPrincipal + FVOfSeries)));
+            rowData.data.push(compoundInterestForPrincipal + FVOfSeries);
         }
 
-        $('#RetirementTableBody').append(row);
+        datasets.push(rowData);
     }
+
+    /* Chart time */
+    retirementChart.data.datasets = datasets;
+    retirementChart.update();
 }
 
 /*------------------------------------------------------------------
@@ -350,28 +362,19 @@ $(document).ready(function () {
  });
 
  /*------------------------------------------------------------------
-  Details Chart
+  Income Chart
  ------------------------------------------------------------------*/
-
 $(document).ready(function () {
     var incomeChartData = {
         labels: ['Take Home Pay', 'Income Tax', 'ACC Levy', 'KiwiSaver Contributions', 'Student Loan Payments'],
         datasets: [{ 
             data: [0, 0, 0, 0, 0],
-            backgroundColor: [
-                'rgb(255, 99, 132)',
-                'rgb(54, 162, 235)',
-                'rgb(255, 206, 86)',
-                'rgb(75, 192, 192)',
-                'rgb(153, 102, 255)',
-                'rgb(255, 159, 64)'
-                ]
+            backgroundColor: ChartColours
         }]
     };
 
     var incomeChartOptions = {
-        legend:
-        {
+        legend: {
             display: false
         },
         tooltips: {
@@ -391,22 +394,14 @@ $(document).ready(function () {
  });
 
  /*------------------------------------------------------------------
-  Accomodation Chart
+  Mortgage Chart
  ------------------------------------------------------------------*/
-
 $(document).ready(function () {
     var mortgageChartData = {
         labels: [],
         datasets: [{ 
             data: [],
-            backgroundColor: [
-                'rgb(255, 99, 132)',
-                'rgb(54, 162, 235)',
-                'rgb(255, 206, 86)',
-                'rgb(75, 192, 192)',
-                'rgb(153, 102, 255)',
-                'rgb(255, 159, 64)'
-                ]
+            backgroundColor: ChartColours
         }]
     };
 
@@ -437,5 +432,42 @@ $(document).ready(function () {
         type: 'bar',
         data: mortgageChartData,
         options: mortgageChartOptions
+    });
+ });
+
+ /*------------------------------------------------------------------
+  Retirement Chart
+ ------------------------------------------------------------------*/
+$(document).ready(function () {
+    var retirementChartData = {
+        labels: ['Conservative', 'Balanced', 'Growth'],
+        datasets: []
+    };
+
+    var retirementChartOptions = {
+        legend: {
+            display: false
+        },
+        tooltips: {
+            callbacks: {
+                label: function(tooltipItem, data) { 
+                    var datasetLabel = data.datasets[tooltipItem.datasetIndex].label;
+                    return datasetLabel + '% Contribution rate: $' + addCommas(data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index]);
+                }
+            }
+        },
+        scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero: true
+                }
+            }]
+        }
+    }
+
+    retirementChart = new Chart($('#RetirementChart'), {
+        type: 'bar',
+        data: retirementChartData,
+        options: retirementChartOptions
     });
  });
