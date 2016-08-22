@@ -429,6 +429,12 @@ $(document).ready(function () {
                         return '$' + addCommas(value);
                     }
                 }
+            }],
+            xAxes: [{
+                scaleLabel: {
+                    display: true,
+                    labelString: "Mortgage Rate"
+                }
             }]
         }
     }
