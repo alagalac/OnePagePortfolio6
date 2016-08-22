@@ -33,6 +33,7 @@ var KiwiSaverFundTypes = [
     {'name': 'Growth', 'return': 7},
     ]
 var RetirementAge = 65;
+var ReturnInRetirement = 3;
 
 var ChartColours = [
     '#FF6384',
@@ -325,7 +326,8 @@ function retirementComputations()
         var rowData = {
             label: KiwiSaverContributionRates[i],
             backgroundColor: ChartColours[i],
-            data: []
+            data: [],
+            balances: []
         };
 
         for(var j = 0; j < KiwiSaverFundTypes.length; j++)
@@ -335,7 +337,9 @@ function retirementComputations()
 
             var compoundInterestForPrincipal = principal * Math.pow((1 + (rate / compoundsPerYear)), compoundsPerYear * years);
             var FVOfSeries = contribution * ((Math.pow(1 + (rate / compoundsPerYear), compoundsPerYear * years) - 1) / (rate / compoundsPerYear));
-            rowData.data.push(compoundInterestForPrincipal + FVOfSeries);
+            var retirementSavings = (compoundInterestForPrincipal + FVOfSeries);
+            rowData.data.push(retirementSavings * (ReturnInRetirement / 100)); // Show annual return
+            rowData.balances.push(retirementSavings);
         }
 
         datasets.push(rowData);
@@ -462,8 +466,15 @@ $(document).ready(function () {
         tooltips: {
             callbacks: {
                 label: function(tooltipItem, data) { 
-                    var datasetLabel = data.datasets[tooltipItem.datasetIndex].label;
-                    return [datasetLabel + '% Contribution rate','$' + addCommas(data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index])];
+                    var datasetLabel = 'No contributions';
+                    if (data.datasets[tooltipItem.datasetIndex].label > 0)
+                    {
+                        datasetLabel = data.datasets[tooltipItem.datasetIndex].label + '% Contribution rate';
+                    }
+                    return [
+                        datasetLabel,
+                        'Balance: $' + addCommas(data.datasets[tooltipItem.datasetIndex].balances[tooltipItem.index]),
+                        'Income: $' + addCommas(data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index])];
                 }
             }
         },
