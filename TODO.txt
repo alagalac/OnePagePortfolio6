@@ -7,4 +7,5 @@ Todo:
 - Look at making retirement graph colors white [DONE]
 - Sort out text and graph placement on slides
 - Add good luck message on final slide?
-- Update retirement slide to have monthly incomes
+- Update retirement slide to have monthly incomes [DONE]
+- Add retirement assumptions tooltip
