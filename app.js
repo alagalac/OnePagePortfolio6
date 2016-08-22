@@ -38,6 +38,8 @@ var RetirementAge = 65;
  Globals
  ------------------------------------------------------------------*/
 var TakeHomePay = 0;
+var incomeChart;
+var mortgageChart;
 
 /*------------------------------------------------------------------
  Scrolling and navigation
@@ -113,45 +115,6 @@ function removeCommas(nStr)
 /*------------------------------------------------------------------
   Details Computations
  ------------------------------------------------------------------*/
-var incomeChart;
-
-$(document).ready(function () {
-    var incomeChartData = {
-        labels: ['Take Home Pay', 'Income Tax', 'ACC Levy', 'KiwiSaver Contributions', 'Student Loan Payments'],
-        datasets: [{ 
-            data: [0, 0, 0, 0, 0],
-            backgroundColor: [
-                'rgb(255, 99, 132)',
-                'rgb(54, 162, 235)',
-                'rgb(255, 206, 86)',
-                'rgb(75, 192, 192)',
-                'rgb(153, 102, 255)',
-                'rgb(255, 159, 64)'
-                ]
-        }]
-    };
-
-    var incomeChartOptions = {
-        legend:
-        {
-            display: false
-        },
-        tooltips: {
-            callbacks: {
-                    label: function(tooltipItem, data) { 
-                        return data.labels[tooltipItem.index] + ': $' + addCommas(data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index]);
-                    }
-                }
-        }
-    }
-
-    incomeChart = new Chart($('#IncomeChart'), {
-        type: 'doughnut',
-        data: incomeChartData,
-        options: incomeChartOptions
-    });
- });
-
 function detailsComputations()
 {
     // Pay calculations
@@ -301,10 +264,8 @@ function accomodationComputations()
     $('#MonthlyAccomodation').text(addCommas(monthlyAccomodation));
     $('#MortgageTableBody').empty();
 
-    var chartData = {
-        labels: [],
-        series: [[]]
-    };
+    var labels = [];
+    var data = [];
 
     for (var i = 0; i < MortgageRatesToCalculate.length; i++)
     {
@@ -314,22 +275,15 @@ function accomodationComputations()
         row.append($('<td>').text('$' + addCommas(mortgageValue)).addClass('right-align'));
         $('#MortgageTableBody').append(row);
 
-        chartData.labels.push(MortgageRatesToCalculate[i] + '%');
-        chartData.series[0].push(mortgageValue);
+        labels.push(MortgageRatesToCalculate[i] + '%');
+        data.push(mortgageValue);
     }
 
     
     /* Chart time */
-    var chartOptions = {
-        axisY: {
-            labelInterpolationFnc: function(value) {
-                return '$' + addCommas(value);
-            },
-            scaleMinSpace: 15
-        }
-    };
-
-    new Chartist.Bar('#MortgageChart', chartData, chartOptions);
+    mortgageChart.data.labels = labels;
+    mortgageChart.data.datasets[0].data = data;
+    mortgageChart.update();
 
 }
 
@@ -393,4 +347,95 @@ $(document).ready(function () {
     emergencyFundComputations();
     accomodationComputations();
     retirementComputations();
+ });
+
+ /*------------------------------------------------------------------
+  Details Chart
+ ------------------------------------------------------------------*/
+
+$(document).ready(function () {
+    var incomeChartData = {
+        labels: ['Take Home Pay', 'Income Tax', 'ACC Levy', 'KiwiSaver Contributions', 'Student Loan Payments'],
+        datasets: [{ 
+            data: [0, 0, 0, 0, 0],
+            backgroundColor: [
+                'rgb(255, 99, 132)',
+                'rgb(54, 162, 235)',
+                'rgb(255, 206, 86)',
+                'rgb(75, 192, 192)',
+                'rgb(153, 102, 255)',
+                'rgb(255, 159, 64)'
+                ]
+        }]
+    };
+
+    var incomeChartOptions = {
+        legend:
+        {
+            display: false
+        },
+        tooltips: {
+            callbacks: {
+                label: function(tooltipItem, data) { 
+                    return data.labels[tooltipItem.index] + ': $' + addCommas(data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index]);
+                }
+            }
+        }
+    }
+
+    incomeChart = new Chart($('#IncomeChart'), {
+        type: 'doughnut',
+        data: incomeChartData,
+        options: incomeChartOptions
+    });
+ });
+
+ /*------------------------------------------------------------------
+  Accomodation Chart
+ ------------------------------------------------------------------*/
+
+$(document).ready(function () {
+    var mortgageChartData = {
+        labels: [],
+        datasets: [{ 
+            data: [],
+            backgroundColor: [
+                'rgb(255, 99, 132)',
+                'rgb(54, 162, 235)',
+                'rgb(255, 206, 86)',
+                'rgb(75, 192, 192)',
+                'rgb(153, 102, 255)',
+                'rgb(255, 159, 64)'
+                ]
+        }]
+    };
+
+    var mortgageChartOptions = {
+        legend: {
+            display: false
+        },
+        tooltips: {
+            callbacks: {
+                title: function() {
+					return '';
+				},
+                label: function(tooltipItem, data) { 
+                    return '$' + addCommas(data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index]);
+                }
+            }
+        },
+        scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero: true
+                }
+            }]
+        }
+    }
+
+    mortgageChart = new Chart($('#MortgageChart'), {
+        type: 'bar',
+        data: mortgageChartData,
+        options: mortgageChartOptions
+    });
  });
