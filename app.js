@@ -62,9 +62,9 @@ $(document).ready(function () {
         $(document).off("scroll");
         
         $('a').each(function () {
-            $(this).removeClass('active');
+            $(this).parent().removeClass('active');
         })
-        $(this).addClass('active');
+        $(this).parent().addClass('active');
       
         var target = this.hash,
             menu = target;
@@ -84,11 +84,11 @@ function onScroll(event){
         var currLink = $(this);
         var refElement = $(currLink.attr("href"));
         if (refElement.position().top <= scrollPos && refElement.position().top + refElement.height() > scrollPos) {
-            $('.header__navigation ul li a').removeClass("active");
-            currLink.addClass("active");
+            $('.header__navigation ul li a').parent().removeClass("active");
+            currLink.parent().addClass("active");
         }
         else{
-            currLink.removeClass("active");
+            currLink.parent().removeClass("active");
         }
     });
 }

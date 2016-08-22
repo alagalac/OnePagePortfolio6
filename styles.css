@@ -41,8 +41,13 @@ body, html {
 .header__navigation
 {
     position: absolute;
-    top: 20px;
+    top: 15px;
     left: 35%;
+}
+
+.header__navigation ul
+{
+    margin: 0;
 }
 
 .header__navigation ul li
@@ -52,23 +57,66 @@ body, html {
 
 .header__navigation a
 {
+    display: inline-block;
     text-transform: uppercase;
     text-decoration: none;
     margin-right: 5px;
-    padding-left: 15px;
-    padding-right: 15px;
     padding-top: 2px;
-    padding-bottom: 2px;
     color: #333;
     background-color: #F2E9C2;
-    border-radius: 25px;
+    text-align: center;
     border: 2px solid #666;
+    width: 150px;
 }
 
-.header__navigation a.active
+.header__navigation li.active a
 {
     background-color: #70AB4B;
 }
+
+.header__navigation span
+{
+    position: absolute;
+	bottom: -10px;
+	display: block;
+	width: 154px;
+	height: 4px;
+	background: #666;
+}
+
+.header__navigation ul li, .header__navigation span {
+	-webkit-transition: all 0.5s ease;
+	-moz-transition: all 0.5s ease;
+	-o-transition: all 0.5s ease;
+	transition: all 0.5s ease;
+	position: relative;
+}
+
+ul li.active:nth-child(1) ~ span,
+ul li:not(.active):nth-child(1):hover ~ span {
+	left: 0%;
+}
+ 
+ul li.active:nth-child(2) ~ span,
+ul li:not(.active):nth-child(2):hover ~ span {
+	left: 20%;
+}
+ 
+ul li.active:nth-child(3) ~ span,
+ul li:not(.active):nth-child(3):hover ~ span {
+	left: 40%;
+}
+ 
+ul li.active:nth-child(4) ~ span,
+ul li:not(.active):nth-child(4):hover ~ span {
+	left: 60%;
+}
+
+ul li.active:nth-child(5) ~ span,
+ul li:not(.active):nth-child(5):hover ~ span {
+	left: 80%;
+}
+
 
 /*------------------------------------------------------------------
  Slides
