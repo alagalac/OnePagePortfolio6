@@ -52,6 +52,7 @@ body, html {
 
 .header__navigation a
 {
+    text-transform: uppercase;
     text-decoration: none;
     margin-right: 5px;
     padding-left: 15px;
