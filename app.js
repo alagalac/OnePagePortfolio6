@@ -308,10 +308,9 @@ function calculateMortgagePrincipal(monthlyPayment, annualInterestRate, years)
 ------------------------------------------------------------------*/
 function retirementComputations()
 {
-    var postRetirementExpenditure = TakeHomePay * 0.8;
-    $('#PostRetirementExpenditure').text(addCommas(postRetirementExpenditure));
-
     var income = parseInt(removeCommas($('#Salary').val())) || 0;
+    var postRetirementExpenditure = income * 0.8;
+    $('#PostRetirementExpenditure').text(addCommas(postRetirementExpenditure));
 
     var currentBalance = parseInt(removeCommas($('#KiwiSaverBalance').val())) || 0;
 
